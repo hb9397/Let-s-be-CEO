@@ -1,4 +1,5 @@
-import { React, useState, useEffect } from 'react'
+import { React, useState } from 'react'
+import ResultModal from './Modal/ResultModal'
 
 const Sonik = () => {
 
@@ -61,37 +62,51 @@ const Sonik = () => {
         return target_sales
     }
 
-
-    const [resultData, setResultData] = useState("")
-    var resultText = ""
+    // 목표 매출을 위한 일일 판매량 -> (목표매출 / 시간기준) / 메뉴 평균 단가
+    var target_volume
+    function T_daily_sales_volumeCalc(target_sales, avgPrice) {
+        target_volume = (target_sales/91.25) / avgPrice
+        return target_volume
+    }
+    
+    var resultText = "" // 결과값 text초기화
+    const [resultData, setResultData] = useState("") // 결과값 text를 담을 useState
     function calc() {
         if (isfixCost && isVarCost) {
             break_evenCalc(fixCost, varCost, totalSales)
+            
             resultText = "손익분기점은 " + break_even + " 입니다."
             setResultData(resultText)
+            
+            setFixCost("")
+            setVarCost("")
         }
         if (isfixCost && isVarCost && isNetProfit) {
             target_salesCalc(fixCost, netProfit, totalSales, varCost)
-            resultText = "손익분기점은 " + break_even + " 이며, 목표 순이익을 위한 목표 매출은 " + target_sales + "입니다."
+            
+            resultText = "손익분기점은 " + break_even + "이며,\n목표 순이익을 위한 목표 매출은 " + target_sales + "입니다."
             setResultData(resultText)
+            
+            setFixCost("")
+            setVarCost("")
+            setNetProfit("")
         }
         if (isfixCost && isVarCost && isNetProfit && isAvgPrice) {
-           
-            var targetVolume = (target_sales/91.25) /avgPrice
-            resultText = "손익분기점은 " + break_even + " 이며, 목표 순이익을 위한 목표 매출은 " + target_sales + "입니다. 목표 매출을 위한 일 판매량은" +targetVolume+"입니다."
+            T_daily_sales_volumeCalc(target_sales, avgPrice)
+            
+            resultText = "손익분기점은 " + break_even + " 이며,\n 목표 순이익을 위한 목표 매출은 " + target_sales + "입니다.\n 목표 매출을 위한 일 판매량은" +target_volume+"입니다."
             setResultData(resultText)
-        
+            
+            setFixCost("")
+            setVarCost("")
+            setNetProfit("")
+            setAvgPrice("")
         }
     }
 
+
     return (
         <div>
-            <br/>
-            <br/>
-            <br/>
-            <br/>
-            <br/>
-            <br/>
             고정비용:
             <input type="number" onChange={fix_cost} value={fixCost}></input><br />
             변동비용:
@@ -100,11 +115,9 @@ const Sonik = () => {
             <input type="number" onChange={t_net_profit} value={netProfit}></input><br />
             메뉴평균단가:
             <input type="number" onChange={m_avg_uprice} value={avgPrice}></input><br />
-            <br />
 
-            <button onClick={calc}>계산</button>
-            <br />
-            {resultData}
+            <br/>
+            <ResultModal calc={calc} result={resultData}> 계산 </ResultModal> {/* ResultModal로 props에 calc, resultdata담아서 보내기 */}
         </div>
     );
 }
