@@ -1,11 +1,12 @@
 import React from 'react'
-import '../../../css/SonikModal.css'
+import '../SonikCSS/SonikModal.css'
 
 // 모달창의 틀 역할을 하며 css파일의 형식에 맞게 모달창을 띄움
 
 const S_modalForm = (props) => { 
   const { open, close, header } = props; // 열기, 닫기, 모달 헤더 텍스트를 부모로부터 받아옴
-  
+ 
+
   return (
      // 모달이 열릴때 openModal 클래스가 생성된다.
      <div className={open ? 'openModal modal' : 'modal'}>
