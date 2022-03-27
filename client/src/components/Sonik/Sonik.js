@@ -80,7 +80,7 @@ const Sonik = () => {
         if (isfixCost && isVarCost) {
             break_evenCalc(fixCost, varCost, totalSales)
 
-            resultText = "손익분기점은 " + break_even + " 입니다."
+            resultText = "손익분기점은 " + break_even + "만원 입니다."
             setResultData(resultText)
             setIsfixCost(false)
             setIsVarCost(false)
@@ -88,7 +88,7 @@ const Sonik = () => {
         if (isfixCost && isVarCost && isNetProfit) {
             target_salesCalc(fixCost, netProfit, totalSales, varCost)
 
-            resultText = "손익분기점은 " + break_even + "이며,\n목표 순이익을 위한 목표 매출은 " + target_sales + "입니다."
+            resultText = "손익분기점은 " + break_even + "만원 이며,\n목표 순이익을 위한 목표 매출은 " + target_sales +  "만원 입니다."
             setResultData(resultText)
 
             setIsfixCost(false)
@@ -98,7 +98,8 @@ const Sonik = () => {
         if (isfixCost && isVarCost && isNetProfit && isAvgPrice) {
             T_daily_sales_volumeCalc(target_sales, avgPrice)
 
-            resultText = "손익분기점은 " + break_even + " 이며,\n 목표 순이익을 위한 목표 매출은 " + target_sales + "입니다.\n 목표 매출을 위한 일 판매량은" + target_volume + "입니다."
+            resultText = "손익분기점은 " + break_even + "만원 이며,\n 목표 순이익을 위한 목표 매출은 " + target_sales 
+                            + "만원 입니다.\n 목표 매출을 위한 일 판매 건수는" + target_volume + "개 입니다."
             setResultData(resultText)
 
             setIsfixCost(false)
@@ -120,16 +121,17 @@ const Sonik = () => {
 
     return (
         <div>
-            <label className='label1' htmlFor='fixcost'>고정비용:</label>
-            <input type="number" onChange={fix_cost} value={fixCost} className="input" id='fixcost'></input>
+            <label className='label1' htmlFor='fixcost'>고정비용</label>
+            <input type="number" onChange={fix_cost} value={fixCost} className="input" id='fixcost'
+                placeholder='단위: 만원'></input>
             <WordInfo_modal
                 result={"생산량의 변동 여하에 관계 없이 불변적으로 지출되는 비용. \n 예시) 임대료, 급여, 대출이자, 기타 비용(인터넷, 정수기...) 등)"}
                 header={'고정비용'} />
 
             <br />
 
-            <label className='label2' htmlFor='varcost'>변동비용:</label>
-            <input type="number" onChange={var_cost} value={varCost} className="input" id='varcost'></input>
+            <label className='label2' htmlFor='varcost'>변동비용</label>
+            <input type="number" onChange={var_cost} value={varCost} className="input" id='varcost' placeholder='단위: 만원'></input>
             <WordInfo_modal
                 result={"생산량의 변동 여하에 따라 가변적으로 지출되는 비용. \n 예시) 원재료비, 전기세, 전화세, 수도세 등"}
                 header={'변동비용'} />
@@ -137,17 +139,18 @@ const Sonik = () => {
             <br />
 
 
-            <label className='label3' htmlFor='netprofit'>목표순이익:</label>
-            <input disabled={isfixCost && isVarCost ? false : true} type="number" onChange={t_net_profit} value={netProfit} className="input" id='netprofit'></input>
+            <label className='label3' htmlFor='netprofit'>목표순이익</label>
+            <input disabled={isfixCost && isVarCost ? false : true} type="number" onChange={t_net_profit} value={netProfit} className="input"
+                id='netprofit' placeholder='단위: 만원'></input>
             <WordInfo_modal
                 result={"고정비, 변동비, 목표순이익 입력시 사용자가 목표로하는 순수이익을 위한 필요매출을 계산합니다."}
                 header={'목표 순이익'} />
 
             <br />
 
-            <label className='label4' htmlFor='avgprice'>메뉴평균단가:</label>
+            <label className='label4' htmlFor='avgprice'>메뉴평균단가</label>
             <input disabled={isfixCost && isVarCost && isNetProfit ? false : true}
-                type="number" onChange={m_avg_uprice} value={avgPrice} className="input" id='avgprice'></input>
+                type="number" onChange={m_avg_uprice} value={avgPrice} className="input" id='avgprice' placeholder='단위: 만원'></input>
             <WordInfo_modal
                 result={"사용자의 매장 내 메뉴들의 평균가격 혹은 주요상품의 가격입력시 목표 매출을 위해 필요한 대략적인 일 필요 판매량을 계산합니다."}
                 header={'메뉴 평균 단가'} />
