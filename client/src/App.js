@@ -16,15 +16,15 @@ import BoardDetail from './components/Board/BoardDetail';
 import AddBoard from './components/Board/AddBoard';
 import MyBoard from './components/Board/MyBoard';
 import Map from './components/Map/Map';
-import { locations } from './components/Map/Locates';
+import { Geojson } from './components/Map/Geojson';
 import Infomation from './components/Map/Infomation';
 import { useState } from 'react';
 import MainPage from './components/Main/MainPage';
 import Sonik from './components/Sonik/Sonik';
-import SonikHeader from './components/Sonik/SonikHeader'
+import Question from './components/Question/Question';
 
 function App() {
-  const [place, setPlace] = useState("기본")
+  const [place, setPlace] = useState("")
   
   return (
     <div className='body'>
@@ -33,9 +33,9 @@ function App() {
           <div className='header'>
             <Header />
           </div>
-          <div className='state'>
+          {/* <div className='state'>
             <State />
-          </div>
+          </div> */}
         </div>
           <Switch>
             <Route exact path='/'>
@@ -71,11 +71,10 @@ function App() {
             </Route>
 
             <Route path="/sonik">
-                  <br/>
-                  <br/>
-                  <br/>
-                  <SonikHeader/>
                   <Sonik></Sonik>
+            </Route>
+            <Route path="/question">
+                  <Question></Question>
             </Route>
 
             <Route path="/map">
@@ -84,10 +83,7 @@ function App() {
                   <Infomation place={place}></Infomation>
                 </Col>
                 <Col>
-                  <Map location={locations} place={place} setPlace={setPlace}></Map>
-                </Col>
-                <Col>
-                  1of1
+                  <Map geojson={Geojson} place={place} setPlace={setPlace}></Map>
                 </Col>
               </Row>
             </Route>

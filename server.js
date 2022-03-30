@@ -113,4 +113,37 @@ app.delete('/api/comment/:no',(req,res)=>{
       })
 })
 
+app.get('/api/question/:id', (req,res)=>{
+    connection.query('SELECT * FROM question WHERE id = ?', req.params.id, function (error, rows, fields) {
+        res.header("Access-Control-Allow-Origin", "*");
+        res.send(rows);
+      })
+})
+
+app.post('/api/question', (req,res)=>{
+    let sql = 'INSERT INTO question VALUES (null,?,?,null,now())'
+    let id = req.body.id;
+    let content = req.body.content;
+    let params = [id, content]
+    connection.query(sql, params, function(error, rows,field){
+        res.header("Access-Control-Allow-Origin", "*");
+        res.send(rows)
+    })
+})
+app.get('/api/answer/', (req,res)=>{
+    connection.query('SELECT * FROM question WHERE id=?', req.query.id,  function (error, rows, fields) {
+        console.log(rows.content)
+        res.header("Access-Control-Allow-Origin", "*");
+        res.send(rows);
+      })
+})
+
+
+app.get('/api/building/:area', (req,res)=>{
+    connection.query('SELECT * FROM 강남구_간단정보 WHERE 행정동_이름=?',req.params.area,function (error, rows, fields) {
+        res.header("Access-Control-Allow-Origin", "*");
+        res.send(rows);
+      })
+})
+
 app.listen(port, ()=> console.log("서버 작동"))
