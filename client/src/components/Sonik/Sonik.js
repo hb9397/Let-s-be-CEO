@@ -55,6 +55,7 @@ const Sonik = () => {
     var break_even
     function break_evenCalc(fixCost, varCost, totalSales) {
         break_even = fixCost / ((totalSales - varCost) / totalSales)
+        break_even = Math.ceil(break_even)
         return break_even
     }
 
@@ -63,6 +64,7 @@ const Sonik = () => {
     var target_sales = ""
     function target_salesCalc(fixCost, netProfit, totalSales, varCost) {
         target_sales = (Number(fixCost) + Number(netProfit)) / ((totalSales - varCost) / totalSales)
+        target_sales = Math.ceil(target_sales)
         return target_sales
     }
 
@@ -70,6 +72,7 @@ const Sonik = () => {
     var target_volume
     function T_daily_sales_volumeCalc(target_sales, avgPrice) { /* 91.25는 (365 / 4)인 1분기에 해당되는 값 */
         target_volume = (target_sales / 91.25) / avgPrice
+        target_volume = Math.ceil(target_volume)
         return target_volume
     }
 
