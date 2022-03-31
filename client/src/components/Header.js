@@ -3,46 +3,45 @@ import { Link } from 'react-router-dom';
 import State from './State/State';
 //상단 내비게이션
 const Header = () => {
-    
+
     return (
         <div className='Header'>
-
-            <div>
+            {/* <div>
                 <ul>
                     <li>
-                        <Link to ='/'>
+                        <Link to='/'>
                             Logo
                         </Link>
                     </li>
                     <li>
-                        <Link to ='/map'>
+                        <Link to='/map'>
                             상권분석
                         </Link>
                     </li>
                     <li>
-                        <Link to ='/sonik'>
+                        <Link to='/sonik'>
                             손익분기
                         </Link>
                     </li>
                     <li>
-                        <Link to ='/board'>
+                        <Link to='/board'>
                             게시판
                         </Link>
                     </li>
                     <li>
-                        <Link to ='/question'>
+                        <Link to='/question'>
                             문의사항
                         </Link>
                     </li>
                     <li>
                         <div>
-                        <State></State>
+                            <State></State>
                         </div>
-                    
+
                     </li>
                 </ul>
-            </div>
-            {/* <Nav fill variant="tabs" defaultActiveKey="/" className='nav'>         
+            </div> */}
+            <Nav fill variant="tabs" defaultActiveKey="/" className='nav'>         
                 <Nav.Item>
                     <Nav.Link href="/">LOGO</Nav.Link>
                 </Nav.Item>
@@ -61,8 +60,8 @@ const Header = () => {
                 <Nav.Item>
                 <State></State>        
                 </Nav.Item>   
-            </Nav> */}
-                   
+            </Nav>
+
         </div>
     );
 };
