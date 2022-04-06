@@ -22,10 +22,9 @@ const connection = mysql.createConnection({ // mysql연결 통로
     port: conf.port,
     database: conf.database
   });
-connection.connect(); //.connect()메서드로 db연결
-//line 15부터 25까지만 묶어서 따로 DB연결 컴포넌트로 분리가능 대신 마지막에 module.exports = connection과 같이 선언 필요
+  connection.connect();  //.connect()메서드로 db연결
 
-app.get('/api/login', (req,res)=>{ // api/login으로 user목록 가져오기
+app.get('/api/login', (req,res)=>{  // api/login으로 user목록 가져오기
     connection.query('SELECT * FROM user', function(err,rows,fields){ //db접근 객첵의 .query()메서드에 sql문 담아서 보내는 형식
         res.header("Access-Control-Allow-Origin", "*"); //해당 헤더 부분은 cors정책에 위반하지 않기 위해사용함
         res.send(rows) //rows는 날릴sql문을 뜻한다
@@ -33,30 +32,29 @@ app.get('/api/login', (req,res)=>{ // api/login으로 user목록 가져오기
 })
 app.post('/api/login', (req,res)=>{ // api/login에 회원가입 정보입력
     let sql = 'INSERT INTO user VALUES (null,?,?,?)';
-    let ID = req.body.id
     let PW = req.body.password
-    let Email = req.body.email // api가 요구하는 값들을 body에 담아와서 알린다, 회원가입시 id, pw, email을 요구
-    let params = [ID, PW, Email] // 이에 맞게 요구되는 값들을 보낼 값들을 리스트에 담아서 
+    let Email = req.body.email    // api가 요구하는 값들을 body에 담아와서 알린다, 회원가입시 id, pw, email을 요구
+    let params = [ID, PW, Email]  // 이에 맞게 요구되는 값들을 보낼 값들을 리스트에 담아서 
     connection.query(sql, params, //insert문의 형식에 맞게 보낸다
         (err, rows, fields) => {
           res.header("Access-Control-Allow-Origin", "*");
           res.send(rows);
     })
 })
-app.put('/api/login/:oldId', (req,res)=>{ // 회원정보 수정
+app.put('/api/login/:oldId', (req,res)=>{ // 회원정보 수정, :oldID는 회원정보 수정을 사용하는 fetch문이 있는 컴포넌트에서 사용하는 변수명으로
     let sql = 'UPDATE user SET ID=?, PW=?, Email=? WHERE ID=?  ';
     let ID = req.body.id
     let PW = req.body.pw
     let Email = req.body.email
-    let oldID = req.params.oldId
-    let params = [ID, PW, Email, oldID]
+    let oldID = req.params.oldId         // parms로 받아와서 사용된다. -> 회원정보 수정이므로 id값을 db에서 변경하기 위해서 사용 
+    let params = [ID, PW, Email, oldID]  
     connection.query(sql, params,
         (err, rows, fields) => {
           res.header("Access-Control-Allow-Origin", "*");
           res.send(rows);
     })
 })
-app.delete('/api/login/:id', (req,res)=>{ // 회원탈퇴
+app.delete('/api/login/:id', (req,res)=>{
     connection.query('DELETE FROM user WHERE ID = ?', req.params.id, function (error, rows, fields) {
         res.header("Access-Control-Allow-Origin", "*");
         res.send(rows);
@@ -143,11 +141,75 @@ app.get('/api/answer/', (req,res)=>{
 })
 
 
-app.get('/api/building/:area', (req,res)=>{
-    connection.query('SELECT * FROM 강남구_간단정보 WHERE 행정동_이름=?',req.params.area,function (error, rows, fields) {
+app.get('/api/building/shop', (req,res)=>{
+    connection.query('SELECT 행정동_이름, 행정동_총점포수 FROM 간단정보',function (error, rows, fields) {
         res.header("Access-Control-Allow-Origin", "*");
         res.send(rows);
       })
 })
+
+app.get('/api/building/:area', (req,res)=>{
+    connection.query('SELECT * FROM 간단정보 WHERE 행정동_이름=?',req.params.area,function (error, rows, fields) {
+        res.header("Access-Control-Allow-Origin", "*");
+        res.send(rows);
+      })
+})
+
+app.get('/api/detailPeople/:place', (req,res)=>{
+    connection.query('SELECT * FROM 상세인구 WHERE 행정동_이름=?',req.params.place , function (error, rows, fields) {
+        res.header("Access-Control-Allow-Origin", "*");
+        res.send(rows);
+      })
+})
+app.get('/api/detailPeople/:place/:area', (req,res)=>{
+    connection.query('SELECT * FROM 상세인구 WHERE 행정동_이름=? and 상권_코드_명=?',[req.params.place, req.params.area] , function (error, rows, fields) {
+        res.header("Access-Control-Allow-Origin", "*");
+        res.send(rows);
+      })
+})
+app.get('/api/detailLocate/:place', (req,res)=>{
+    connection.query('SELECT * FROM 상세지역 WHERE 행정동_이름=?',req.params.place, function (error, rows, fields) {
+        res.header("Access-Control-Allow-Origin", "*");
+        res.send(rows);
+      })
+})
+app.get('/api/detailSales/:place', (req,res)=>{
+    connection.query('SELECT * FROM 상세매출 WHERE 행정동_이름=?',req.params.place, function (error, rows, fields) {
+        res.header("Access-Control-Allow-Origin", "*");
+        res.send(rows);
+      })
+})
+app.get('/api2/detailSales/:place/:category', (req,res)=>{
+    connection.query('SELECT * FROM 상세매출 WHERE 서비스_업종_코드_명=? AND 행정동_이름=?',[req.params.category,req.params.place],function (error, rows, fields) {
+        res.header("Access-Control-Allow-Origin", "*");
+        res.send(rows);
+      })
+})
+app.get('/api3/detailSales/:place/:category/:area', (req,res)=>{
+    connection.query('SELECT * FROM 상세매출 WHERE 서비스_업종_코드_명=? AND 행정동_이름=? AND 상권_코드_명=? ',[req.params.category,req.params.place,req.params.area],function (error, rows, fields) {
+        res.header("Access-Control-Allow-Origin", "*");
+        res.send(rows);
+      })
+})
+
+app.get('/api/:place',(req,res)=>{
+    connection.query('SELECT 분식전문점, 양식음식점, 일식음식점, 중식음식점, 치킨전문점, 패스트푸드점, 한식음식점, 호프간이주점 FROM 상세지역 WHERE 행정동_이름=? ',req.params.place,function (error, rows, fields) {
+        res.header("Access-Control-Allow-Origin", "*");
+        res.send(rows);
+      })
+})
+
+
+
+app.get('/human/:place/:area/:condition', (req,res)=>{
+    console.log(req.params.place, req.params.area, req.params.condition)
+    const condition = req.params.condition
+    connection.query(`SELECT ${condition} FROM 상세인구 WHERE 행정동_이름=? and 상권_코드_명=?`,[req.params.place, req.params.area] , function (error, rows, fields) {
+        res.header("Access-Control-Allow-Origin", "*");
+        res.send(rows);
+      })
+})
+
+
 
 app.listen(port, ()=> console.log("서버 작동"))

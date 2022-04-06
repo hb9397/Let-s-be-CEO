@@ -16,12 +16,13 @@ import BoardDetail from './components/Board/BoardDetail';
 import AddBoard from './components/Board/AddBoard';
 import MyBoard from './components/Board/MyBoard';
 import Map from './components/Map/Map';
+import Sonik from './components/Sonik/Sonik';
 import { Geojson } from './components/Map/Geojson';
-import Infomation from './components/Map/Infomation';
 import { useState } from 'react';
 import MainPage from './components/Main/MainPage';
-import Sonik from './components/Sonik/Sonik';
+
 import Question from './components/Question/Question';
+import DetailAnalyze from './components/DetailAnalyze/DetailAnalyze';
 
 function App() {
   const [place, setPlace] = useState("")
@@ -78,18 +79,21 @@ function App() {
             </Route>
 
             <Route path="/map">
-              <Row>
+              {/* <Row>
                 <Col>
                   <Infomation place={place}></Infomation>
                 </Col>
-                <Col>
+                <Col> */}
                   <Map geojson={Geojson} place={place} setPlace={setPlace}></Map>
-                </Col>
-              </Row>
+                {/* </Col>
+              </Row> */}
+            </Route>
+            <Route path="/detailAnalyze">
+                  <DetailAnalyze></DetailAnalyze>
             </Route>
 
           </Switch>
-          <Row>
+          {/* <Row>
             <Col>
               1of1
             </Col>
@@ -99,7 +103,7 @@ function App() {
             <Col>
               1of1
             </Col>
-          </Row>
+          </Row> */}
           {/* <div className='Head'>
             <Header></Header>
           </div>
