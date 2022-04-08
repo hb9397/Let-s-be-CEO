@@ -10,22 +10,23 @@ const AddBoard = () => {
     const [boardContent, setBoardConetent]= useState("");
 
     function handleBoardTitle(e){
-        e.preventDefault();
-        setBoardTitle(e.target.value)
+        e.preventDefault(); //input의 고유동작을 중단 시키기위해서 사용
+        setBoardTitle(e.target.value) // 이후에 boardTitle을 e.target.value로 받아온다
     }
     function handleBoardContent(e){
         e.preventDefault();
         setBoardConetent(e.target.value);
     }
-    function addBoard(){
+    function addBoard(){ // server.js에서 열어놓은 
         const userData = {
             title: boardTitle,
             content: boardContent,
-            writer: sessionStorage.getItem('user_id')
-        }
-        axios.post("http://localhost:5000/api/board", userData)
+            writer: sessionStorage.getItem('user_id') // sessionStorage나 localStorage는 브라우저 내에 key-value쌍을 저장시킬 수 있게한다.
+        } // sessionStorage.getItem('key값')으로 가져온 user_id에 해당되는 값은 페이지가 새로고침하여도 값이 유지된다.
+
+        axios.post("http://localhost:5000/api/board", userData) // api주소에 userData(제목, 내용, 사용자 id)값 등록
         .then((res)=>{
-            if(res.status===200){
+            if(res.status===200){ // 게시글을 성공적으로 등록했을 경우, 200(요청성공값)
                 alert("생성이 완료되었습니다.")
                 history.push('/board')
             }

@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 //게시판 꺼내기
 const BoardInfo = (props) => {
     const history = useHistory()
+
     function selectBoard(e){
         e.preventDefault();
         history.push({
@@ -11,6 +12,7 @@ const BoardInfo = (props) => {
             state: {props: props}
         })
     }
+    
     return (
      <tr onClick={selectBoard}>
          <td>{props.title}</td>
