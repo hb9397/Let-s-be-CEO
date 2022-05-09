@@ -26,7 +26,7 @@ const DetailAnalyze = () => {
     setCategory(e.target.value)
     fetch(`http://localhost:5000/api2/detailSales/${place}/${category}`)
       .then(res => res.json())
-      .then(data => setDeSales(data))
+      .then(data => setDeSales(data)) //api에서 가져온 data에 해당되는 값을 seDesalses를 통해서 deSales값을 바꾼것
 
   }
 
@@ -89,6 +89,7 @@ const DetailAnalyze = () => {
           <DetailSales deSales={deSales} place={place} category={category}></DetailSales>{'  '}
         </td>
       </tr>
+      
 
 
 

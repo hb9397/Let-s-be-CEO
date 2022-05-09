@@ -34,7 +34,7 @@ const DetailLoate = (props) => {
         var arr1 = [] //상권코드 담는 배열
         var arr2 = [] //상권 이름 담는 배열
         var arr3 = [] //집객 시설 담는 배열
-        props.deLocate?.map((v) => {
+        props.deLocate?.map((v) => { // A ? ...일때 A가 true면 ...실행
             arr1.push(v.상권_코드)
             arr2.push(v.상권_코드_명)
             arr3.push(v.집객시설_수)

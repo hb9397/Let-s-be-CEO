@@ -9,7 +9,7 @@ const BoardInfo = (props) => {
         e.preventDefault();
         history.push({
             pathname:'/boardDetail',
-            state: {props: props}
+            state: {props: props} // history값에 인자를 전달하는 형태 _ state값에 {key값: value값}형태로 전달
         })
     }
     

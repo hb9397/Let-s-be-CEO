@@ -4,11 +4,11 @@ import { useState } from 'react'
 import { Bar, Doughnut, Pie } from 'react-chartjs-2'
 
 const DetailSales = (props) => {
-  const [bestSales, setBestSales] = useState(0) //매출 가장 높은상권
-  const [bestArea, setBestArea] = useState() //매출가장 높은 상권
+  const [bestSales, setBestSales] = useState(0) //매출 가장 높은상권 매출
+  const [bestArea, setBestArea] = useState() //매출가장 높은 상권의 이름
 
   const [area, setArea] = useState() //상권 선택
-  const [showAreaData, setShowAreaData] = useState(false) //상권 선택
+  const [showAreaData, setShowAreaData] = useState(false) //상권 선택했는지 검사값 저장하는 변수
   const [areaName, setAreaName] = useState() //상권이름
   const [amount, setAmount] = useState() //분기당 매출 금액
 
@@ -179,9 +179,12 @@ const ageSalesData = {
       alert("업종을 선택해주세요.")
     }else{
       setAreaName(arr1)
+      console.log(areaName)
       setAmount(arr2)
       setBestSales(arr3)
+      console.log(arr3)
       setBestArea(arr4)
+      console.log(arr4)
       setShow(true)
       setShowAreaData(false)
     }
@@ -190,9 +193,8 @@ const ageSalesData = {
   function showData(e) {
     setShowAreaData(false)
     setArea(e.target.value)
-
-
   }
+
   function areaChoice() {
     if(area==="상권선택" || area===undefined){
       alert("상권을 선택해주세요.")
