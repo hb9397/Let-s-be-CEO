@@ -2,7 +2,6 @@ import React from 'react'
 import { Bar, Doughnut, Pie } from 'react-chartjs-2'
 import { Chart, ArcElement, registerables } from 'chart.js'
 import { useEffect } from 'react';
-import { chartColors } from './chartColors';
 import { useState } from 'react';
 
 Chart.register(ArcElement);
@@ -49,6 +48,7 @@ const ChartData = (props) => {
     if (props.buildingData === undefined) {
       console.log("데이터가 존재하지 않습니다. ")
     } else {
+      console.log(props.buildingData)
       setMonday(props.buildingData.월요일_생활인구_수)
       setTuesday(props.buildingData.화요일_생활인구_수)
       setWednesday(props.buildingData.수요일_생활인구_수)
