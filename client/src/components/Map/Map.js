@@ -16,12 +16,10 @@ const Map = (props) => {
     }
 
   useEffect(() => {
-    const customOverlay = new kakao.maps.CustomOverlay({}); // 지도내 마커 커스텀 가능한 객체
-    //const infowindow = new kakao.maps.InfoWindow({ removable: true }); // 말풍선 api
+    const customOverlay = new kakao.maps.CustomOverlay({});
+    const infowindow = new kakao.maps.InfoWindow({ removable: true });
     let data = props.geojson[0].features
-    //console.log(props.geojson[0].features)
     let container = document.getElementById("map");
-    //console.log(container)
     let options = {
       center: new kakao.maps.LatLng(37.5051407, 127.0470828),
       level: 7,
@@ -50,7 +48,7 @@ const Map = (props) => {
       var polygonPath = [];
       coordinates[0].forEach((coordinate) => {
         polygonPath.push(new kakao.maps.LatLng(coordinate[1], coordinate[0]));
-        //console.log(coordinate[1], coordinate[0])
+
       });
 
       let polygon = new kakao.maps.Polygon({
@@ -65,7 +63,7 @@ const Map = (props) => {
       })
       polygons.push(polygon);
       handlePolygon(name, polygon)
-      console.log(polygons)
+
     }
 
     function makeMultiPolygon(name, coordinates) {

@@ -15,7 +15,6 @@ const SimpleModal = (props) => {
   const history = useHistory();
 
   useEffect(()=>{
-    
     if(props.place.includes('동')){
       fetch(`http://localhost:5000/api/building/${props.place}`)
       .then(res=>res.json())
@@ -26,10 +25,10 @@ const SimpleModal = (props) => {
 
 
  const customStyles= {
-   overlay: {zIndex: 1000,  backgroundColor: 'rgba(100, 100, 70, 0.5)',},
+   overlay: {zIndex: 1000,  backgroundColor: 'rgba(100, 100, 70, 0.6)',},
    content: {
-    border: '1',
-    borderRadius: '4px',
+    border: '0',
+    borderRadius: '',
     bottom: 'auto',
     
     left: '50%',
@@ -37,10 +36,11 @@ const SimpleModal = (props) => {
     position: 'fixed',
     right: 'auto',
     top: '50%',
-    transform: 'translate(-50%,-50%)',
+    transform: 'translate(-100%,-50%)',
     minWidth: '20rem',
     width: '100px',
     maxWidth: '1000px',
+   
   
     
   }

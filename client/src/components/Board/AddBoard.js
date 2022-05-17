@@ -2,6 +2,10 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { Link, useHistory } from 'react-router-dom';
+
+//-----------------CSS import--------------------//
+import s from '../../css/Board.module.css';
+
 //게시판 추가
 const AddBoard = () => {
 
@@ -10,23 +14,22 @@ const AddBoard = () => {
     const [boardContent, setBoardConetent]= useState("");
 
     function handleBoardTitle(e){
-        e.preventDefault(); //input의 고유동작을 중단 시키기위해서 사용
-        setBoardTitle(e.target.value) // 이후에 boardTitle을 e.target.value로 받아온다
+        e.preventDefault();
+        setBoardTitle(e.target.value)
     }
     function handleBoardContent(e){
         e.preventDefault();
         setBoardConetent(e.target.value);
     }
-    function addBoard(){ // server.js에서 열어놓은 
+    function addBoard(){
         const userData = {
             title: boardTitle,
             content: boardContent,
-            writer: sessionStorage.getItem('user_id') // sessionStorage나 localStorage는 브라우저 내에 key-value쌍을 저장시킬 수 있게한다.
-        } // sessionStorage.getItem('key값')으로 가져온 user_id에 해당되는 값은 페이지가 새로고침하여도 값이 유지된다.
-
-        axios.post("http://localhost:5000/api/board", userData) // api주소에 userData(제목, 내용, 사용자 id)값 등록
+            writer: sessionStorage.getItem('user_id')
+        }
+        axios.post("http://localhost:5000/api/board", userData)
         .then((res)=>{
-            if(res.status===200){ // 게시글을 성공적으로 등록했을 경우, 200(요청성공값)
+            if(res.status===200){
                 alert("생성이 완료되었습니다.")
                 history.push('/board')
             }
@@ -37,14 +40,29 @@ const AddBoard = () => {
     }
     
     return (
-        <div>
-            <h1>게시글 작성</h1>
-            제목:<input type="text" name="boardTitle" value={boardTitle} onChange={handleBoardTitle}></input> <br/><br/>
-            내용:<textarea name="boardContent" value={boardContent} onChange={handleBoardContent}></textarea><br/>
-            <Button onClick={addBoard}>완료</Button> {' '}
-            <Link to='/board'>
-            <Button>취소</Button>
-            </Link>
+        <div className={s.board}>
+            <div className={s.createBoard}>
+                <h1>Create Board</h1>
+
+                <div className={s.createBody}>
+                    <div className={s.createInputs}>
+                        <label for="" className={s.createLabel}>Board Title</label>
+                        <input type="text" name="boardTitle" value={boardTitle} onChange={handleBoardTitle}
+                        className={s.createInput}></input>
+                    </div>
+
+                    <div className={s.createInputs}>
+                        <label for="" className={s.createLabel}>Board Content</label>
+                        <textarea name="boardContent" value={boardContent} onChange={handleBoardContent}
+                        className={s.createInputText} rows="10"></textarea>
+                    </div>
+                </div>
+
+                <div className={s.btnArea}>
+                <Button onClick={addBoard} className={s.btn}>완료</Button>
+                <Link to='/board'><Button className={s.btn}>취소</Button></Link>
+                </div>
+            </div>
         </div>
     );
 };
