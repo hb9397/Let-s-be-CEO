@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { React, useState } from 'react'
 import ResultModal from './Modal/ResultModal'
 import WordInfo_modal from './Modal/WordInfo_modal'
@@ -7,14 +8,21 @@ import "./SonikCSS/Sonik.css"
 
 const Sonik = () => {
 
-    /* const [totalSales, setTotalSale] = useState()
 
-    function T_sales() {
-        setTotalSale()
+    //분기당 총 매출
+    const [totalSales, settotalSales] = useState()
+
+    useEffect(()=>{
+        fetch('http://localhost:5000/api/building/shop')
+        .then(res => res.json())
+        .then(data => settotalSales(data))
+        console.log(totalSales)
+    },[])
+    
+    /* function calcSales () {
+        var result = 3000
+        for (let i = 0; i < )
     } */
-
-    // 총 매출
-    var totalSales = 3000
 
     // 고정비
     const [fixCost, setFixCost] = useState("")
