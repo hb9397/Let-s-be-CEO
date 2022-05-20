@@ -5,24 +5,40 @@ import WordInfo_modal from './Modal/WordInfo_modal'
 import "./SonikCSS/input.css"
 import "./SonikCSS/Sonik.css"
 
-
 const Sonik = () => {
 
 
-    //분기당 총 매출
-    const [totalSales, settotalSales] = useState()
-
-    useEffect(()=>{
-        fetch('http://localhost:5000/api/building/shop')
+    
+    const [totalSales, settotalSales] = useState() // 강남구 전체 요식업 매장의 분기당 평균매출을 저장할 useState()
+    var len = [] // json파일로 가져온 배열은 바로 length를 못쓰기 때문에 Object.keys()메서드로 키값만 가져와서 배열 길이값만 가져오는 용도
+    var salelist = [] // 매출값을 json으로부터 뽑아와서 연산을 위해 배열에 옮겨놓기 위한 용도
+    const [rememberTotal, setrememberTotal] = useState() //매출값 초기화시 원래 데이터를 기억하기 위한 변수
+    var remember = 0 // 매출값을 저장하기 위한 중간 다리, 렌더링시 해당 변수는 다시 0으로 초기화 되어 바로 쓸스 없어서 useState()남긴다
+    
+    const[holderSales, setholderSales] = useState()
+    
+    // 렌더링 시 한번만 뽑아올 데이터가 연산이 필요하다면 useEffect에 알맞게 작성할것 따로 함수를 작성해서 하는 경우 연산과정시 무한대로 접근하게 되어 오류발생
+    // 강남구 전체 요식업 매장의 분기당 평균매출
+    useEffect(() => {
+        fetch("http://localhost:5000/api/building/shop")
         .then(res => res.json())
-        .then(data => settotalSales(data))
-        console.log(totalSales)
+        .then(data => {
+            len = Object.keys(data)
+            var hap = 0 // salelist의 요소들의 합을 저장할 변수
+            for (let i=0; i<len.length; i++){
+                salelist[i]= data[i].행정동_분기당_평균매출
+                hap += salelist[i]
+            }
+            remember = Math.floor((hap / len.length) / 10000)
+            setholderSales(String(remember)+" 만원")
+            settotalSales(remember)
+            setrememberTotal(remember)
+        })
     },[])
     
-    /* function calcSales () {
-        var result = 3000
-        for (let i = 0; i < )
-    } */
+    function userTotalSales(e) {
+        settotalSales(e.target.value)
+    }
 
     // 고정비
     const [fixCost, setFixCost] = useState("")
@@ -80,7 +96,7 @@ const Sonik = () => {
     var target_volume
     function T_daily_sales_volumeCalc(target_sales, avgPrice) { /* 91.25는 (365 / 4)인 1분기에 해당되는 값 */
         target_volume = (target_sales / 91.25) / avgPrice
-        target_volume = Math.ceil(target_volume)
+        target_volume = Math.ceil(target_volume) // 소수점 버리는 내장함수
         return target_volume
     }
 
@@ -88,6 +104,7 @@ const Sonik = () => {
     const [resultData, setResultData] = useState("") // 결과값 text를 담을 useState
 
     function calc() {
+        
         if (isfixCost && isVarCost) {
             break_evenCalc(fixCost, varCost, totalSales)
 
@@ -99,7 +116,7 @@ const Sonik = () => {
         if (isfixCost && isVarCost && isNetProfit) {
             target_salesCalc(fixCost, netProfit, totalSales, varCost)
 
-            resultText = "손익분기점은 " + break_even + "만원 이며,\n목표 순이익을 위한 목표 매출은 " + target_sales +  "만원 입니다."
+            resultText = "손익분기점은 " + break_even + "만원 이며,\n목표 순이익을 위한 목표 매출은 " + target_sales + "만원 입니다."
             setResultData(resultText)
 
             setIsfixCost(false)
@@ -109,8 +126,8 @@ const Sonik = () => {
         if (isfixCost && isVarCost && isNetProfit && isAvgPrice) {
             T_daily_sales_volumeCalc(target_sales, avgPrice)
 
-            resultText = "손익분기점은 " + break_even + "만원 이며,\n 목표 순이익을 위한 목표 매출은 " + target_sales 
-                            + "만원 입니다.\n 목표 매출을 위한 일 판매 건수는" + target_volume + "개 입니다."
+            resultText = "손익분기점은 " + break_even + "만원 이며,\n 목표 순이익을 위한 목표 매출은 " + target_sales
+                + "만원 입니다.\n 목표 매출을 위한 일 판매 건수는" + target_volume + "개 입니다."
             setResultData(resultText)
 
             setIsfixCost(false)
@@ -128,10 +145,31 @@ const Sonik = () => {
         setVarCost("")
         setNetProfit("")
         setAvgPrice("")
+        settotalSales(rememberTotal)
+        
     }
+
+
 
     return (
         <div className='sonik'>
+            ※ 안내사항 ※ <br/><br/>
+            ● 모든 입력값의 단위는 만원 단위로 입력해주세요<br/>
+            ● 입력할 분기당 매출과 고정비용, 변동비용, 목표 순이익은 한 분기에 해당되는 금액을 입력해주세요.<br/>
+            ● 분기당 매출을 입력하지 않으면 강남구 전체 요식업소들의 분기당 매출의 평균값으로 설정됩니다.<br/>
+            ● 고정비용과 변동비용은 필수 입력값이며, 결과값으로 한 분기의 손익분기 매출 값을 제공합니다.<br/>
+            ● 목표 순이익을 추가로 입력하면, 추가적으로 순이익을 위한 한 분기의 목표 매출 값을 제공합니다.<br/>
+            ● 메뉴 평균 단가를 입력하면 한 분기 목표 매출을 위해 필요한 일평균 판매량을 제공합니다.<br/><br/>
+            
+            <label className='label0' htmlFor='totalSales'>분기당 매출</label>
+            <input type="number" onChange={userTotalSales} value={totalSales} className="input" id='totalSales'
+                placeholder={holderSales}></input>
+            <WordInfo_modal
+                result={"한 분기(3개월)에 발생되는 매출을 만원 단위로 적어주세요.\n\n 예시) 89320050원은 8932까지만 입력. \n\n 아무 값도 입력하지 않고 계산할 시 강남구 전체 요식업 매장의 평균 분기당 매출로 \n 계산이 진행됩니다."}
+                header={'분기당 매출'} />
+
+            <br />
+
             <label className='label1' htmlFor='fixcost'>고정비용</label>
             <input type="number" onChange={fix_cost} value={fixCost} className="input" id='fixcost'
                 placeholder='단위: 만원'></input>
