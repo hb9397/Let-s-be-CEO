@@ -7,13 +7,11 @@ import "./SonikCSS/Sonik.css"
 
 const Sonik = () => {
 
-
-    
     const [totalSales, settotalSales] = useState() // 강남구 전체 요식업 매장의 분기당 평균매출을 저장할 useState()
     var len = [] // json파일로 가져온 배열은 바로 length를 못쓰기 때문에 Object.keys()메서드로 키값만 가져와서 배열 길이값만 가져오는 용도
     var salelist = [] // 매출값을 json으로부터 뽑아와서 연산을 위해 배열에 옮겨놓기 위한 용도
     const [rememberTotal, setrememberTotal] = useState() //매출값 초기화시 원래 데이터를 기억하기 위한 변수
-    var remember = 0 // 매출값을 저장하기 위한 중간 다리, 렌더링시 해당 변수는 다시 0으로 초기화 되어 바로 쓸스 없어서 useState()남긴다
+    var remember = 0 // 매출값을 저장하기 위한 중간 다리, 렌더링시 해당 변수는 다시 0으로 초기화 되어 바로 쓸수 없어서 위의 useState()로 남긴다
     
     const[holderSales, setholderSales] = useState()
     
@@ -33,11 +31,12 @@ const Sonik = () => {
             setholderSales(String(remember)+" 만원")
             settotalSales(remember)
             setrememberTotal(remember)
+            setSendTTS(remember)
         })
     },[])
     
     function userTotalSales(e) {
-        settotalSales(e.target.value)
+        settotalSales(Number(e.target.value))
     }
 
     // 고정비
@@ -45,7 +44,7 @@ const Sonik = () => {
     const [isfixCost, setIsfixCost] = useState(false)
 
     function fix_cost(e) {
-        setFixCost(e.target.value)
+        setFixCost(Number(e.target.value))
         setIsfixCost(true)
     }
 
@@ -54,7 +53,7 @@ const Sonik = () => {
     const [isVarCost, setIsVarCost] = useState(false)
 
     function var_cost(e) {
-        setVarCost(e.target.value)
+        setVarCost(Number(e.target.value))
         setIsVarCost(true)
     }
 
@@ -62,7 +61,7 @@ const Sonik = () => {
     const [netProfit, setNetProfit] = useState("")
     const [isNetProfit, setIsNetProfit] = useState(false)
     function t_net_profit(e) {
-        setNetProfit(e.target.value)
+        setNetProfit(Number(e.target.value))
         setIsNetProfit(true)
     }
 
@@ -71,18 +70,25 @@ const Sonik = () => {
     const [isAvgPrice, setIsAvgPrice] = useState(false)
 
     function m_avg_uprice(e) {
-        setAvgPrice(e.target.value)
+        setAvgPrice(Number(e.target.value))
         setIsAvgPrice(true)
     }
 
     // 손익분기점 구하기 -> 고정비 / ((총매출 - 변동비) / 총매출)
     var break_even
     function break_evenCalc(fixCost, varCost, totalSales) {
-        break_even = fixCost / ((totalSales - varCost) / totalSales)
-        break_even = Math.ceil(break_even)
-        return break_even
-    }
+        break_even = fixCost / (1 - (varCost / totalSales))
 
+        if(break_even == Infinity){
+            break_even = "계속되는 적자로 구할 수 없습니다."
+            return break_even
+        }
+        else{
+            break_even = Math.ceil(break_even) + "만원입니다."
+        return break_even
+        }
+    }
+    
     // 목표 순이익을 위한 목표 매출 구하기 -> (고정비 + 목표이익) / ((매출 - 변동비) / 총 매출)
     //var target_sales // target_sales값을 T_daily_sales_volumeCalc()에서 쓰기 때문에 전역변수로 선언
     var target_sales = ""
@@ -108,25 +114,37 @@ const Sonik = () => {
         if (isfixCost && isVarCost) {
             break_evenCalc(fixCost, varCost, totalSales)
 
-            resultText = "손익분기점은 " + break_even + "만원 입니다."
+            resultText = "손익분기점은 " + break_even
             setResultData(resultText)
             setIsfixCost(false)
             setIsVarCost(false)
+
+            setSendTTS(totalSales) // e.target.value로 값을 받아올때 맨 뒷자리를 버린다, 아마 처음 받아오는 useState는 마지막 값까지 인식하지만
+            setSendFC(fixCost)     // 첫번째 useState로 받아오고 그다음으로 해당 값을 다른 useState가 받을때 마지막 입력(인식) 직전값 까지만
+            setSendVC(varCost)     // 넘기는 것 같다.
+            setSendBE(break_even)
         }
         if (isfixCost && isVarCost && isNetProfit) {
             target_salesCalc(fixCost, netProfit, totalSales, varCost)
 
-            resultText = "손익분기점은 " + break_even + "만원 이며,\n목표 순이익을 위한 목표 매출은 " + target_sales + "만원 입니다."
+            resultText = "손익분기점은 " + break_even + "\n목표 순이익을 위한 목표 매출은 " + target_sales + "만원 입니다."
             setResultData(resultText)
 
             setIsfixCost(false)
             setIsVarCost(false)
             setIsNetProfit(false)
+
+            setSendTTS(totalSales)
+            setSendFC(fixCost)
+            setSendVC(varCost)
+            setSendBE(break_even)
+            setSendNP(netProfit)
+            setSendTS(target_sales)
         }
         if (isfixCost && isVarCost && isNetProfit && isAvgPrice) {
             T_daily_sales_volumeCalc(target_sales, avgPrice)
 
-            resultText = "손익분기점은 " + break_even + "만원 이며,\n 목표 순이익을 위한 목표 매출은 " + target_sales
+            resultText = "손익분기점은 " + break_even + "\n 목표 순이익을 위한 목표 매출은 " + target_sales
                 + "만원 입니다.\n 목표 매출을 위한 일 판매 건수는" + target_volume + "개 입니다."
             setResultData(resultText)
 
@@ -136,6 +154,14 @@ const Sonik = () => {
             setIsAvgPrice(false)
             /* 입력된 값들 초기화하여 두번째 실행부터 결과 text에 null이나 infinity값을 출력하는 것을 방지함 */
 
+            setSendTTS(totalSales)
+            setSendFC(fixCost)
+            setSendVC(varCost)
+            setSendBE(break_even)
+            setSendNP(netProfit)
+            setSendTS(target_sales)
+            setSendAP(avgPrice)
+            setSendTV(target_volume)
         }
         if (!(isfixCost && isVarCost)) {
             resultText = "고정비용과 변동비용은 최소한의 입력값입니다, \n  안내사항을 다시한번 읽어주십시요."
@@ -145,11 +171,18 @@ const Sonik = () => {
         setVarCost("")
         setNetProfit("")
         setAvgPrice("")
-        settotalSales(rememberTotal)
-        
+        settotalSales(rememberTotal)     
     }
 
-
+    // ResultModal의 그래프 표시에 전달할 각 비용변수
+    const [sendTTS, setSendTTS] = useState() // 분기당 매출
+    const [sendFC, setSendFC] = useState() // 고정비
+    const [sendVC, setSendVC] = useState() // 변동비
+    const [sendBE, setSendBE] = useState() // 손익분기
+    const [sendNP, setSendNP] = useState() // 목표순이익
+    const [sendTS, setSendTS] = useState() // 목표매출
+    const [sendAP, setSendAP] = useState() // 메뉴 평균단가
+    const [sendTV, setSendTV] = useState() // 하루 목표 판매량
 
     return (
         <div className='sonik'>
@@ -207,7 +240,9 @@ const Sonik = () => {
             <br />
 
             <br />
-            <ResultModal calc={calc} header={"계산 결과"} result={resultData}> 계산 </ResultModal> {/* ResultModal로 props에 headr, calc, resultdata담아서 보내기 */}
+            <ResultModal calc={calc} header={"계산 결과"} result={resultData} totalSales={sendTTS} fixCost={sendFC} varCost={sendVC} break_even={sendBE}
+            netProfit={sendNP} target_sales={sendTS} avgPrice={sendAP} target_volume={sendTV}> 계산 </ResultModal> 
+            {/* ResultModal로 props에 headr, calc, resultdata담아서 보내기 */}
         </div>
     );
 }
