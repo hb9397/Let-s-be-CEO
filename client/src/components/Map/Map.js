@@ -21,7 +21,7 @@ const Map = (props) => {
     let data = props.geojson[0].features
     let container = document.getElementById("map");
     let options = {
-      center: new kakao.maps.LatLng(37.5051407, 127.0470828),
+      center: new kakao.maps.LatLng(37.484102, 127.034369),
       level: 7,
       
     };
@@ -57,9 +57,9 @@ const Map = (props) => {
         strokeWeight: 2, // 선의 두께입니다
         strokeColor: '#004c80', // 선의 색깔입니다
         strokeOpacity: 0.8, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
-        strokeStyle: 'solid', // 선의 스타일입니다
+        strokeStyle: 'dashed', // 선의 스타일입니다
         fillColor: '#fff', // 채우기 색깔입니다
-        fillOpacity: 0.7, // 채우기 불투명도 입니다
+        fillOpacity: 0.6, // 채우기 불투명도 입니다
       })
       polygons.push(polygon);
       handlePolygon(name, polygon)
@@ -83,9 +83,9 @@ const Map = (props) => {
         strokeWeight: 2, // 선의 두께입니다
         strokeColor: '#004c80', // 선의 색깔입니다
         strokeOpacity: 0.8, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
-        strokeStyle: 'solid', // 선의 스타일입니다
+        strokeStyle: 'dashed', // 선의 스타일입니다
         fillColor: '#fff', // 채우기 색깔입니다
-        fillOpacity: 0.7, // 채우기 불투명도 입니다
+        fillOpacity: 0.6, // 채우기 불투명도 입니다
       })
       polygons.push(polygon);
       handlePolygon(name, polygon)

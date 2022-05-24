@@ -17,20 +17,20 @@ export default function MainPage() {
 
             <ul className={styles.amount}>
                 <li><div>
-                    <div className={styles.contents1}>상권 수</div>
-                    <div className={styles.result}>5,820</div>
+                    <div className={styles.contents1}>강남구 내 상권 수</div>
+                    <div className={styles.result}>115</div>
                 </div></li>
                 <li><div>
-                    <div className={styles.contents1}>요식업 점포 수</div>
-                    <div className={styles.result}>100,000+</div>
+                    <div className={styles.contents1}>강남구 요식업 총 점포 수</div>
+                    <div className={styles.result}>8,918</div>
                 </div></li>
                 <li><div>
-                    <div className={styles.contents1}>분기별 매출 평균</div>
-                    <div className={styles.result}>₩000,000,000,000</div>
+                    <div className={styles.contents1}>강남구 분기별 매출 평균</div>
+                    <div className={styles.result}>₩ 80,551,289.6</div>
                 </div></li>
                 <li><div>
-                    <div className={styles.contents1}>분기별 유동인구 수</div>
-                    <div className={styles.result}>000,000,000</div>
+                    <div className={styles.contents1}>강남구 분기별 생활인구 수</div>
+                    <div className={styles.result}>76,210,953</div>
                 </div></li>
             </ul>
 
@@ -81,7 +81,8 @@ export default function MainPage() {
             <div className={styles.main_text1}>
 
             </div>
-            <iframe width="560" height="315" src="https://www.youtube.com/embed/2znzBerWyWU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/lN1c6q6OvRg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            {/* <iframe width="560" height="315" src="https://www.youtube.com/embed/2znzBerWyWU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> */}
         </div>
     );
 }

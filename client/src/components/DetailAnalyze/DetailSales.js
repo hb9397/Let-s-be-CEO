@@ -3,6 +3,8 @@ import { useEffect } from 'react'
 import { useState } from 'react'
 import { Bar, Doughnut, Pie } from 'react-chartjs-2'
 
+import s from "../../css/Analyze.module.css";
+
 const DetailSales = (props) => {
   const [bestSales, setBestSales] = useState(0) //매출 가장 높은상권
   const [bestArea, setBestArea] = useState() //매출가장 높은 상권
@@ -78,7 +80,7 @@ const DetailSales = (props) => {
     datasets: [
       {
         label: '',
-        borderWidth: 10, // 테두리 두께
+        borderWidth: 0, // 테두리 두께
         data: amount, // 수치
         fill: true,
         backgroundColor: ['yellow', 'red', 'green', 'blue', 'white', 'black', 'green'], // 각 막대 색
@@ -95,11 +97,11 @@ const DetailSales = (props) => {
     labels: ["남성 매출 금액", "여성 매출 금액"],
     datasets: [
       {
-        label: '',
-        borderWidth: 5, // 테두리 두께
+        label: '성별',
+        borderWidth: 0, // 테두리 두께
         data: [man, woman], // 수치
         fill: true,
-        backgroundColor: ['yellow', 'blue'] // 각 막대 색
+        backgroundColor: ['rgb(89, 89, 255)', 'rgb(255, 86, 86)'] // 각 막대 색
       }
     ]
   }
@@ -241,48 +243,71 @@ const DetailSales = (props) => {
   }
   return (
     <div>
-      <br />
-      <button onClick={analyze}>분석하기</button><br /><br />
-      {show ? <div style={{ width: 1500, height: 300 }}>
-
-        분기당 매출 금액(업종별 상권 분기 매출 비교)
-        <Bar data={salesData}
-          width={1000}
-          height={300}
-          options={{
-            responsive: false, legend: { display: false, position: "bottom" },
-            scales: {
-              yAxes: [
-                {
-                  ticks: {
-                    beginAtZero: true,
-                  }
+      <div className={s.btnArea} onClick={analyze}>
+        <h1>분석하기</h1>
+      </div>
+      {show ? 
+        <div className={s.analyzeContentConainer}>
+          <div className={s.contentSectorsSquareSales}>
+            <div className={s.sectorsItemSales}>
+              <div className={s.setorsItemTitle}>
+                <h4>분기당 매출 금액</h4>
+                <h4>(업종별 상권 분기 매출 비교)</h4>
+              </div>
+              <Bar data={salesData}
+                width={450}
+                height={450}
+                options={{
+                responsive: false, legend: { display: false, position: "bottom" },
+                scales: {
+                  yAxes: [
+                    {
+                      ticks: {
+                        beginAtZero: true,
+                      }
+                    }
+                  ]
                 }
-              ]
-            }
-          }}></Bar><br />
-        <p>분기당 매출 금액이 가장 많은 상권은 {bestArea}이고 금액은 {bestSales}원입니다.</p>
+              }}></Bar>
+            </div>
+            <div className={s.sectorsItemSales}>
+              <div className={s.setorsItemTitle}>
+                <h4>매출 분석</h4>
+              </div>
+              <div>
+                <p>분기당 매출 금액이 가장 많은 상권 : {bestArea}
+                <p>분기당 매출 금액 : {bestSales} 원</p></p>
+              </div>
+            </div>
+          </div>
 
-        상권을 선택해주세요:{' '}<select onChange={showData}>
-          <option>상권선택</option>
-          {areaName.map((v) => {
-            return <option>{v}</option>
-          })}
-        </select> <br />
-        <button onClick={areaChoice}>상권 선택</button>
+          <div className={s.selectArea}>
+            <p>상권을 선택해주세요:</p>
+            <select className={s.selectItem}
+              onChange={showData}>
+              <option>상권선택</option>
+              {areaName.map((v) => {
+                return <option>{v}</option>
+              })}
+            </select> <br />
+            <button onClick={areaChoice}>상권 선택</button>
+            </div>
       </div> : null}
-      {showAreaData ? <div><br /><br /><br /><br /><br /><br /><br />
-      상권 내 성 별 매출 비율
+      {showAreaData ? 
+        <div className={s.salesContainer}>
+          <div className={s.salesSexRatio}>
+            <div className={s.setorsItemTitle}>
+              <h4>상권 내 성 별 매출 비율</h4>
+            </div>
+            <div className={s.salesSexData}>
               <Bar data={sexData} options={{ responsive: false, legend: { display: true, position: "bottom" } }}></Bar><br />
-        <table>
-          <tr>
-            <th></th>
-            <th></th>
-            <th></th>
-          </tr>
-          <tr>
-            <td>
-              상권 내 시간대 별 매출 비율
+            </div>
+          </div>
+          <div className={s.salseDataContainer}>
+
+            {/* ==============상권 내 시간대 별 매출 차트================ */}
+            <div className={s.salesDataChart}>
+              <h4>상권 내 시간대 별 매출 비율</h4>
               <Doughnut
                 data={timeSalesData}
                 width={300}
@@ -297,54 +322,50 @@ const DetailSales = (props) => {
                   tooltips: {
                     backgroundColor: "#5a6e7f",
                   }
-                }}></Doughnut><br />
-            </td>
-            <td>
-              상권 내 요일 별 매출 비율
-              <Doughnut
-                data={daySalesData}
-                width={300}
-                height={300}
-                options={{
-                  responsive: false,
-                  legend: { display: true, position: "right" },
-                  datalabels: {
-                    display: true,
-                    color: "white",
-                  },
-                  tooltips: {
-                    backgroundColor: "#5a6e7f",
-                  }
-                }}></Doughnut><br />
-            </td>
-            <td>
-              상권 내 연령대 별 매출 비율
-              <Doughnut
-                data={ageSalesData}
-                width={300}
-                height={300}
-                options={{
-                  responsive: false,
-                  legend: { display: true, position: "right" },
-                  datalabels: {
-                    display: true,
-                    color: "white",
-                  },
-                  tooltips: {
-                    backgroundColor: "#5a6e7f",
-                  }
                 }}></Doughnut>
-            </td>
-            
-          </tr>
-        </table>
+              </div>
+              
+              {/* ==============상권 내 요일 별 매출 차트================ */}
+              <div className={s.salesDataChart}>
+              <h4>상권 내 요일 별 매출 비율</h4>
+                <Doughnut
+                  data={daySalesData}
+                  width={300}
+                  height={300}
+                  options={{
+                    responsive: false,
+                    legend: { display: true, position: "right" },
+                    datalabels: {
+                      display: true,
+                      color: "white",
+                    },
+                    tooltips: {
+                      backgroundColor: "#5a6e7f",
+                    }
+                }}></Doughnut>
+              </div>
 
-
-
-
-      </div> : null}
-
-
+              {/* ==============상권 내 연령대 별 매출 차트================ */}
+              <div className={s.salesDataChart}>
+              <h4>상권 내 연령대 별 매출 비율</h4>
+                <Doughnut
+                  data={ageSalesData}
+                  width={300}
+                  height={300}
+                  options={{
+                    responsive: false,
+                    legend: { display: true, position: "right" },
+                    datalabels: {
+                      display: true,
+                      color: "white",
+                    },
+                    tooltips: {
+                      backgroundColor: "#5a6e7f",
+                    }
+                  }}></Doughnut>
+                </div>
+          </div>
+      </div> : null}        
     </div>
   )
 }

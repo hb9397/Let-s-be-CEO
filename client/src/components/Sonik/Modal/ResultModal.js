@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import S_modalForm from './S_modalForm';
 import ReactApexChart from 'react-apexcharts'
-import { useEffect } from 'react';
-
+import s from "../../../css/Sonik.module.css"
 
 // Sonik으로 부터 받은 props로 모달창의 동작과 결과값을 출력한다
 
@@ -46,14 +45,7 @@ const ResultModal = (props) => {
   }
 
   function CloseClickEvent(){
-    setTotalSales(null)
-    setFixCost(null)
-    setVarCost(null)
-    setBreak_even(null)
-    setAvgPrice(null)
-    setNetProfit(null)
-    setTarget_sales(null)
-    setTarget_volume(null)
+    window.location.replace("/sonik")
     closeModal()
   }
 
@@ -116,7 +108,7 @@ const ResultModal = (props) => {
 
   return (
     <React.Fragment>
-      <button className='button2' onClick={OpenClickEvent}>계산</button>
+      <button className={s.button2} onClick={OpenClickEvent}>계산</button>
       {/* header 부분에 텍스트를 입력한다,  */}
 
       <S_modalForm open={modalOpen} close={CloseClickEvent} header="계산결과"> {/* S_Modal로 props에 modalOpen uesState와 closeModal함수 전달 */}
@@ -124,9 +116,9 @@ const ResultModal = (props) => {
         {props.result}
         <div>
           {
-            (Boolean(totalSales & fixCost & varCost)) === true
+            (Boolean(totalSales && fixCost && varCost)) === true
               ? <ReactApexChart options={
-                (Boolean(netProfit & avgPrice)) === true
+                (Boolean(netProfit && avgPrice)) === true
                   ? options2
                   : options1
               } series={
@@ -141,7 +133,7 @@ const ResultModal = (props) => {
           ※ 수익선이 지출선 보다 아래로 위치한 경우 적자이며, 위로 위치한 경우 흑자입니다.<br />
           <div>
             {
-              (Boolean(totalSales & fixCost & varCost & netProfit)) === true
+              (Boolean(totalSales && fixCost && varCost && netProfit)) === true
                 ? <div>
                   ※ X축은 판매량, Y축은 금액으로 단위는 만원 입니다.<br />
                   ※ 수익선의 가운데 Y값은 현재 분기당 매출이며, 가장 끝 Y값은 목표 순이익을 위한 목표 매출금액입니다.<br />

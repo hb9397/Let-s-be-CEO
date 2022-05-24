@@ -6,6 +6,8 @@ import { useEffect,useState } from 'react';
 import ChartData from './ChartData';
 import { Link, useHistory } from 'react-router-dom';
 
+import s from '../../css/SimpleAnal.module.css';
+import { UilAnalytics } from '@iconscout/react-unicons'
 
 
 Modal.setAppElement("#root")
@@ -25,23 +27,32 @@ const SimpleModal = (props) => {
 
 
  const customStyles= {
-   overlay: {zIndex: 1000,  backgroundColor: 'rgba(100, 100, 70, 0.6)',},
+    overlay: {zIndex: 1000,  
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    display: 'grid',
+    // justifyItems: 'center',
+    justifyContent : 'center',
+    alignItems : 'center',
+    },
    content: {
-    border: '0',
-    borderRadius: '',
-    bottom: 'auto',
+      // width : '1080px',
+      // maxwidth: '1080px',
+      // display : 'grid',
+    // height:'720px',
+    // border: '1px solid #fff',
+    // borderRadius: '4px',
+    // bottom: 'auto',
     
-    left: '50%',
-    padding: '2rem',
-    position: 'fixed',
-    right: 'auto',
-    top: '50%',
-    transform: 'translate(-100%,-50%)',
-    minWidth: '20rem',
-    width: '100px',
-    maxWidth: '1000px',
-   
-  
+    // left: '50%',
+    // padding: '2rem',
+    // position: 'fixed',
+    // right: 'auto',
+    // top: '50%',
+    // transform: 'translate(-120%,-50%)',
+    // minWidth: '20rem',
+    // width: '100px',
+    // maxWidth: '1000px',
+
     
   }
   }
@@ -60,31 +71,32 @@ const SimpleModal = (props) => {
 
   return (
     <div>
-      <Modal className="simpleModal"
+      <Modal className={s.simpleModal}
         style={customStyles}
         isOpen={props.openModal}
         onRequestClose={props.closeModal}>
-        <div className='modalItem'>
-          <h3 className='prac'>간단 분석 {''}</h3>
+
+      <div className={s.modalTitleContainer}>
+          <h1>상권 간단분석 : </h1>
           <h1 className='prac'>{props.place}</h1>
-          <div>
+      </div>
+
+      <div className={s.modalContentContainer}>
             <ChartData place={props.place} buildingData={buildingData}></ChartData>
+      </div>
+
+      <div className={s.btnArea}>
+            <Link to ={{
+              pathname: '/detailAnalyze',
+              state: {
+                place: props.place
+              }
+            }}>
+            <button className={s.modalBtn}>상세 분석</button></Link>
             
-          </div>
-          <Link to ={{
-            pathname: '/detailAnalyze',
-            state: {
-              place: props.place
-            }
-          }}>
-            <button>상세 분석</button></Link>
-          
-          
-          <br/><br/>
-          <button onClick={props.closeModal}>닫기</button>
+            <button className={s.modalBtn} onClick={props.closeModal}>닫기</button>
+      </div>
 
-
-        </div>
       </Modal>
     </div>
   )
