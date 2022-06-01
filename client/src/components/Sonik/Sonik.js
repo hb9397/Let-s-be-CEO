@@ -14,52 +14,53 @@ const Sonik = () => {
 
     const [totalSales, settotalSales] = useState() // 강남구 전체 요식업 매장의 분기당 평균매출을 저장할 useState()
     var len = [] // json파일로 가져온 배열은 바로 length를 못쓰기 때문에 Object.keys()메서드로 키값만 가져와서 배열 길이값만 가져오는 용도
-    var salelist = [] // 매출값을 json으로부터 뽑아와서 연산을 위해 배열에 옮겨놓기 위한 용도
+    var saleList = [] // 매출값을 json으로부터 뽑아와서 연산을 위해 배열에 옮겨놓기 위한 용도
     const [rememberTotal, setrememberTotal] = useState() //매출값 초기화시 원래 데이터를 기억하기 위한 변수
     var remember = 0 // 매출값을 저장하기 위한 중간 다리, 렌더링시 해당 변수는 다시 0으로 초기화 되어 바로 쓸수 없어서 위의 useState()로 남긴다
 
     const [holderSales, setholderSales] = useState()
 
     // 렌더링 시 한번만 뽑아올 데이터가 연산이 필요하다면 useEffect에 알맞게 작성할것 따로 함수를 작성해서 하는 경우 연산과정시 무한대로 접근하게 되어 오류발생
+    // 따라서 렌더링 할 때 바로 연산하도록 코드 작성
     // 강남구 전체 요식업 매장의 분기당 평균매출
     useEffect(() => {
         fetch("http://localhost:5000/api/building/shop")
-            .then(res => res.json())
-            .then(data => {
-                len = Object.keys(data)
+            .then(res => res.json()) // api로 부터 받아온 값을 json으로 형변환
+            .then(data => { // 받아온 json 값들을 data로 하여 조작
+                len = Object.keys(data) //json형식의 값(data) key값만을 저장한 배열
                 var hap = 0 // salelist의 요소들의 합을 저장할 변수
-                for (let i = 0; i < len.length; i++) {
-                    salelist[i] = data[i].행정동_분기당_평균매출
-                    hap += salelist[i]
+                for (let i = 0; i < len.length; i++) { // 반복문으로 data의 데이터 개수 만큼 
+                    saleList[i] = data[i].행정동_분기당_평균매출 // saleList배열에 각 행정동에 해당되는 분기당 평균 매출 저장
+                    hap += saleList[i] // 모든 행정동의 분기당 평균 매출 합 
                 }
-                remember = Math.floor((hap / len.length) / 10000)
-                setholderSales(String(remember) + " 만원")
-                settotalSales(remember)
-                setrememberTotal(remember)
-                setSendTTS(remember)
+                remember = Math.floor((hap / len.length) / 10000) // 결과값의 단위는 만원 단위로 모든 행정동의 분기당 평균 매출 합을 평균을 위해 행정도 개수 만큼 나누고 10000으로 나눈다
+                setholderSales(String(remember) + " 만원") // input 태그의 placeholder옵션에 들어갈 강남구 분기당 평균 매출로 문자열로 형변환 후 holderSales에 초기화
+                settotalSales(remember) // calc()에 사용되는 분기당 매출값을 현재 강남구 평균 분기 당 매출값으로 설정
+                setrememberTotal(remember) // 1회 이상 계산이후 다시 페이지가 렌더링될 때 사용되는 분기당 평균 매출값으로 현재 강남구 분기당 매출값을 기억하는 용도
+                setSendTTS(remember) // ResultModal에 전달할 강남구 분기당 평균 매출값
             })
     }, [])
 
-    function userTotalSales(e) {
-        settotalSales(Number(e.target.value))
+    function userTotalSales(e) { // 사용자가 input에서 입력하는 값을 분기당 매출 값으로 설정하는 함수 
+        settotalSales(Number(e.target.value)) // calc()에서 사용되는 totalSales의 값을 해당값으로 초기화
     }
 
     // 고정비
-    const [fixCost, setFixCost] = useState("")
-    const [isfixCost, setIsfixCost] = useState(false)
+    const [fixCost, setFixCost] = useState("") 
+    const [isfixCost, setIsfixCost] = useState(false) // 고정비가 입력되었는지 확인하기 위한 용도
 
-    function fix_cost(e) {
+    function fix_cost(e) { // 사용자가 input에서 입력하는 값을 고정비용으로 설정하는 함수 
         setFixCost(Number(e.target.value))
-        setIsfixCost(true)
+        setIsfixCost(true) // 고정비 입력 확인
     }
 
     //변동비
-    const [varCost, setVarCost] = useState("")
-    const [isVarCost, setIsVarCost] = useState(false)
+    const [varCost, setVarCost] = useState("") 
+    const [isVarCost, setIsVarCost] = useState(false) // 변동비가 입력되었는지 확인하기 위한 용도
 
-    function var_cost(e) {
+    function var_cost(e) { // 사용자가 input에서 입력하는 값을 변동비용으로 설정하는 함수
         setVarCost(Number(e.target.value))
-        setIsVarCost(true)
+        setIsVarCost(true) // 변동비 입력 확인
     }
 
     //목표 순이익
