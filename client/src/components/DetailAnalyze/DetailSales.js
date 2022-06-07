@@ -5,6 +5,9 @@ import { Bar, Doughnut, Pie } from 'react-chartjs-2'
 
 import s from "../../css/Analyze.module.css";
 
+//상세매출에 대한 정보로 업종 선택 시 해당 동에 선택 업종에 대한 지역정보를 상권 별로 제공하고
+//상권 선택 시 상권에 대한 지역 정보를 제공한다.
+
 const DetailSales = (props) => {
   const [bestSales, setBestSales] = useState(0) //매출 가장 높은상권
   const [bestArea, setBestArea] = useState() //매출가장 높은 상권
@@ -13,11 +16,7 @@ const DetailSales = (props) => {
   const [showAreaData, setShowAreaData] = useState(false) //상권 선택
   const [areaName, setAreaName] = useState() //상권이름
   const [amount, setAmount] = useState() //분기당 매출 금액
-
   const [show, setShow] = useState(false) //데이터 보여주기
-
-
-  const [areaData, SetAreaData] = useState() //상권에 맞는 정보담는 데이터
 
   const [time0, setTime0] = useState(0) //00~06 시간대 매출 
   const [time6, setTime6] = useState(0) //06~11 시간대 매출
@@ -28,13 +27,14 @@ const DetailSales = (props) => {
 
   const [sun, setSun] = useState() //일요일 매출
   const [mon, setMon] = useState() //월요일 매출
-  const [tuse, setTuse] = useState() //화
-  const [wed, setWed] = useState() //수
-  const [thur, setThur] = useState() //목
-  const [fri, setFri] = useState() //금
-  const [sat, setSat] = useState() //토
+  const [tuse, setTuse] = useState() //화요일 매출
+  const [wed, setWed] = useState() //수요일 매출
+  const [thur, setThur] = useState() //목요일 매출
+  const [fri, setFri] = useState() //금요일 매출
+  const [sat, setSat] = useState() //토요일 매출
 
-  const [age10, setAge10] = useState(0) //연령대 10~60이상
+  //연령대 10대부터 60대이상 매출
+  const [age10, setAge10] = useState(0) 
   const [age20, setAge20] = useState(0)
   const [age30, setAge30] = useState(0)
   const [age40, setAge40] = useState(0)
@@ -51,6 +51,7 @@ const DetailSales = (props) => {
   var arr3 = 0 //최고 매출 금액 샘플
   var arr4 = "" //최고 매출 상권 샘플
 
+  //해당 동에 업종에 대한 정보를 받아와 담는다.
   useEffect(() => {
     fetch(`http://localhost:5000/api2/detailSales/${props.place}/${props.category}`)
       .then(res => res.json())
@@ -59,6 +60,7 @@ const DetailSales = (props) => {
         arr2.push(v.분기당_매출_금액)
       }))
   }, [props])
+
   useEffect(() => {
     fetch(`http://localhost:5000/api2/detailSales/${props.place}/${props.category}`)
       .then(res => res.json())
@@ -181,7 +183,7 @@ const DetailSales = (props) => {
     ],
   };
 
-
+ //업종을 선택한 후 해당 동에 대한 상세 분석
   function analyze() {
     if (props.category === "업종 선택" || props.category === undefined) {
       alert("업종을 선택해주세요.")
@@ -198,9 +200,9 @@ const DetailSales = (props) => {
   function showData(e) {
     setShowAreaData(false)
     setArea(e.target.value)
-
-
   }
+
+  //상권 선택 후 해당 상권에 대한 상세분석을 위한 정보를 담는다.
   function areaChoice() {
     if (area === "상권선택" || area === undefined) {
       alert("상권을 선택해주세요.")
@@ -236,16 +238,14 @@ const DetailSales = (props) => {
         })
       setShowAreaData(true)
     }
-
-
-
-
   }
+
   return (
     <div>
       <div className={s.btnArea} onClick={analyze}>
         <h1>분석하기</h1>
       </div>
+      {/* 해당 동에 상권 별 분석 정보 */}
       {show ? 
         <div className={s.analyzeContentConainer}>
           <div className={s.contentSectorsSquareSales}>
@@ -280,7 +280,6 @@ const DetailSales = (props) => {
               </div>
             </div>
           </div>
-
           <div className={s.selectArea}>
             <p>상권을 선택해주세요:</p>
             <select className={s.selectItem}
@@ -293,6 +292,7 @@ const DetailSales = (props) => {
             <button onClick={areaChoice}>상권 선택</button>
             </div>
       </div> : null}
+      {/* 상권 선택 시 해당 상권에 대한 정보 제공 */}
       {showAreaData ? 
         <div className={s.salesContainer}>
           <div className={s.salesSexRatio}>

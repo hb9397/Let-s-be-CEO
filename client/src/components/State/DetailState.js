@@ -1,13 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { Link, useHistory } from 'react-router-dom';
-//내 상세 정보보기
+import s from '../../css/State.module.css';
+import userImg from '../../img/user.png';
+
+
+//로그인한 사용자 자신의 상세 정보를 볼 수 있으며 수정이 가능하다.
+
 const DetailState = () => {
   const history = useHistory()
   const [id,setId] = useState("")
   const [pw,setPw] = useState("")
   const [email, setEmail] = useState("")
 
+  //로그인한 사용자의 정보를 가져오기
   useEffect(()=>{
     fetch("http://localhost:5000/api/login")
     .then((res)=>res.json())
@@ -33,6 +39,7 @@ const DetailState = () => {
     e.preventDefault();
     setEmail(e.target.value)
   }
+  //내 정보 수정하기 
   function modify() {
     const url=`http://localhost:5000/api/login/${sessionStorage.getItem("user_id")}`
     const data = {
@@ -64,16 +71,44 @@ const DetailState = () => {
       }})
   }
   return (
-  <div>
-      <h1>내 상세 정보</h1>
-      ID:<input type="text" name="id" value={id} onChange={handleId} ></input><br/>
-      PW: <input type="text" name="pw" value={pw} onChange={handlePw}></input><br/>
-      Email:<input type="text" name="email" value={email} onChange={handleEmail}></input><br/>
-      <Button onClick={modify}>수정하기</Button>{' '}
-      <Link to ="/">
-      <Button>뒤로</Button></Link> <br/><br/>
-      <Button onClick={deleteId}>회원탈퇴</Button>
-      
+  <div className={s.state}>
+    <div>
+      <div>
+        <Link to ="/">
+          <Button className={s.btnBack}>뒤로</Button>
+        </Link>
+      </div>
+      <div className={s.stateContainer}>
+        <div className={s.titleArea}>
+          <h1>USER</h1>
+          <h1>Info.</h1>
+        </div>
+        <div className={s.contentArea}>
+          <div className={s.imgArea}>
+            <img className={s.userImg} src={userImg}></img>
+          </div>
+          <div className={s.dataArea}>
+            <div className={s.dataItems}>
+              <p>ID</p>
+              <input className={s.dataInput} type="text" name="id" value={id} onChange={handleId} ></input>
+            </div>
+
+            <div className={s.dataItems}>
+              <p>PW</p>
+              <input className={s.dataInputs}  type="text" name="pw"  onChange={handlePw} placeholder="***" ></input>
+            </div>
+
+            <div className={s.dataItems}>
+              <p>Email</p>
+              <input className={s.dataInput} type="text" name="email" value={email} onChange={handleEmail} ></input>
+            </div>
+            
+            <Button className={s.databtn} onClick={modify}>수정하기</Button>
+          </div>
+        </div>
+            <Button className={s.btnDel} onClick={deleteId}>회원탈퇴</Button>
+      </div>
+    </div>
   </div>
   );
 };
