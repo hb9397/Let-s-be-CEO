@@ -95,7 +95,7 @@ const DetailState = () => {
 
             <div className={s.dataItems}>
               <p>PW</p>
-              <input className={s.dataInputs}  type="text" name="pw"  onChange={handlePw} placeholder="***" ></input>
+              <input className={s.dataInputs}  type="password" name="pw"  onChange={handlePw} value={pw} ></input>
             </div>
 
             <div className={s.dataItems}>
